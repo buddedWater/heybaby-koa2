@@ -1,13 +1,18 @@
 const router = require('koa-router')()
 const secret = 'dear baby'
 const jwt = require('jsonwebtoken')
-const db = require('monk')('mongodb://admin:admin@60.205.231.78:27017/admin')
+const db = require('monk')('mongodb://admin:heyheyyou@60.205.231.78:27017/admin')
 const users = db.get('users')
+const { encrypt, validate } = require('../utils/bcryptPassword')
 
-router.get('/', async (ctx, next) => {
-  await ctx.render('index', {
-    title: 'Hello Koa 2!'
-  })
+router.get('/api1', async (ctx, next) => {
+  let { pwd } = ctx.request.query
+  let password = await encrypt(pwd)
+  console.log(password)
+  let flag = await validate(pwd,password)
+  ctx.body = {
+    password,flag
+  }
 })
 
 router.get('/baby/userInfo', async (ctx) => {
@@ -28,9 +33,9 @@ router.get('/baby/userInfo', async (ctx) => {
 
 router.post('/api1/login', async (ctx, next) => { 
   const user = ctx.request.body
-  let st = await users.findOne(user);
-  console.log(user,st)
-  if(st) {
+  let st = await users.findOne({name:user.name});
+  let flag = await validate(user.password,st.password)
+  if(flag) {
     let userToken = {
         name: user.name
     }

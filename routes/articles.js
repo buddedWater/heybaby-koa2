@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-const db = require('monk')('mongodb://admin:admin@60.205.231.78:27017/admin')
+const db = require('monk')('mongodb://admin:heyheyyou@60.205.231.78:27017/admin')
 const articles = db.get('articles')
 articles.createIndex({'createTime': -1})
 articles.createIndex({'createTime': 1})

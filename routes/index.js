@@ -34,22 +34,29 @@ router.get('/baby/userInfo', async (ctx) => {
 router.post('/api1/login', async (ctx, next) => { 
   const user = ctx.request.body
   let st = await users.findOne({name:user.name});
-  let flag = await validate(user.password,st.password)
-  if(flag) {
-    let userToken = {
-        name: user.name
-    }
-    const token = jwt.sign(userToken, secret, {expiresIn: '1h'})  //token签名 有效期为1小时
-    ctx.body = {
-        code: 1,
-        token
-    }
-  } else {
+  if(st){
+    let flag = await validate(user.password,st.password)
+    if(flag) {
+      let userToken = {
+          name: user.name
+      }
+      const token = jwt.sign(userToken, secret, {expiresIn: '1h'})  //token签名 有效期为1小时
+      ctx.body = {
+          code: 1,
+          token
+      }
+    } else {
+      ctx.body = {
+          message: '参数错误',
+          code: -1
+      }
+    } 
+  }else {
     ctx.body = {
         message: '参数错误',
         code: -1
     }
-  } 
+  }   
 })
 
 router.get('/json', async (ctx, next) => {

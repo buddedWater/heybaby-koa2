@@ -9,6 +9,7 @@ const jwtKoa = require('koa-jwt')
 const secret = 'dear baby'
 const index = require('./routes/index')
 const articles = require('./routes/articles')
+const oranges = require('./routes/oranges')
 
 // error handler
 onerror(app)
@@ -40,6 +41,7 @@ app.use(jwtKoa({secret}).unless({
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(articles.routes(), articles.allowedMethods())
+app.use(oranges.routes(), oranges.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

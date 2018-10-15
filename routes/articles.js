@@ -9,9 +9,8 @@ articles.createIndex({'modifyTime': 1})
 
 router.get('/api1/article', async (ctx) => {
   let { pageSize, current, orderBy, order } = ctx.request.query
-  if(!orderBy){orderBy="createTime";order=-1}
+  if(!orderBy){orderBy="modifyTime"; order=-1}
   let total = await articles.count()
-  console.log(total ,pageSize ,current)
   let st = await articles.find({},{sort: {[orderBy]: parseInt(order)}, skip: (current - 1)*pageSize, limit: parseInt(pageSize) })
   ctx.body = { code: 1, list: st, total };
 })
